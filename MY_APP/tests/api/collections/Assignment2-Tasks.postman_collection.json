@@ -1,0 +1,378 @@
+{
+	"info": {
+		"_postman_id": "1f400762-68df-41b2-9a6b-2f9b297830a5",
+		"name": "Assignment2-Tasks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TASK",
+			"item": [
+				{
+					"name": "Create a new task",
+					"item": [
+						{
+							"name": "Create a new task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"var jsonData = pm.response.json();\r",
+											"var content = pm.environment.get(\"content\");\r",
+											"pm.test(\"Content is correct\", function () {\r",
+											"    pm.expect(jsonData.content).to.eql(content);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"taskId\", jsonData.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{content}}\",\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"es\",\r\n    \"priority\": 3\r\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create tasks",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();\r",
+											"var content = pm.variables.get(\"content\");\r",
+											"var priority = pm.variables.get(\"priority\");\r",
+											"pm.test.skip(\"Task is correct\", function () {\r",
+											"    pm.expect(jsonData.content).to.eql(content);\r",
+											"    pm.expect(jsonData.priority).to.eql(priority);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{content}}\",\r\n    \"due_string\": \"tomorrow at 12\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": {{priority}}\r\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get active tasks",
+					"item": [
+						{
+							"name": "Get active tasks",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}",
+									"host": [
+										"{{baseUrl}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get an active task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const schema = {\r",
+											"    \"type\": \"object\",\r",
+											"    \"properties\": {\r",
+											"        \"content\": {\"type\" : \"string\"},\r",
+											"        \"due\": {\"type\" : \"object\"},\r",
+											"        \"due_lang\": {\"type\" : \"string\"},\r",
+											"        \"priority\": {\"type\" : \"number\"}\r",
+											"    },\r",
+											"    \"required\" : [\"content\", \"due\", \"priority\"]\r",
+											"};\r",
+											"\r",
+											"\r",
+											"pm.test('Schema is valid', function () {\r",
+											"    pm.response.to.have.jsonSchema(schema)\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response time is less than 2000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/:task",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										":task"
+									],
+									"variable": [
+										{
+											"key": "task",
+											"value": "{{taskId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update a task",
+					"item": [
+						{
+							"name": "Update a task",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Do homework\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/:task",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										":task"
+									],
+									"variable": [
+										{
+											"key": "task",
+											"value": "{{taskId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change a task status to 'complete'",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Do Homework\",\r\n    \"completed\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/:task",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										":task"
+									],
+									"variable": [
+										{
+											"key": "task",
+											"value": "{{taskId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Close task",
+					"item": [
+						{
+							"name": "Close task",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/:task/close",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										":task",
+										"close"
+									],
+									"variable": [
+										{
+											"key": "task",
+											"value": "{{taskId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reopen a task",
+					"item": [
+						{
+							"name": "Reopen a task",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/:task/reopen",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										":task",
+										"reopen"
+									],
+									"variable": [
+										{
+											"key": "task",
+											"value": "{{taskId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete a task",
+					"item": [
+						{
+							"name": "Delete a task",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/:task",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										":task"
+									],
+									"variable": [
+										{
+											"key": "task",
+											"value": "{{taskId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 2xx\", function () {",
+					"    pm.response.to.be.success;",
+					"});",
+					"",
+					"pm.test(\"Response time is less than 2000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+					"});",
+					"",
+					"pm.test(\"Response time is less than 200ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(200);",
+					"});"
+				]
+			}
+		}
+	]
+}

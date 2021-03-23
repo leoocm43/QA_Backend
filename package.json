@@ -1,0 +1,22 @@
+{
+  "name": "qa2",
+  "version": "1.0.0",
+  "description": "backend QA certification",
+  "main": "index.js",
+  "scripts": {
+    "testAPI": "npx newman run './MY_APP/tests/api/collections/Assignment2-Tasks.postman_collection.json' -e './MY_APP/tests/api/envVariables/qa-tasks.postman_environment.json' -r htmlextra --reporter-htmlextra-export 'MY_APP/tests/reports/reporte.html'",
+    "testAPI_tasks" : "npx newman run './MY_APP/tests/api/collections/Assignment2-createTasks.postman_collection.json' -e './MY_APP/tests/api/envVariables/qa-Tasks.postman_environment.json' -r htmlextra --reporter-htmlextra-export 'MY_APP/tests/reports/reporte_createtasks.html' -d './MY_APP/tests/api/data/create_tasks.csv'",
+    "testAPI_CLI" : "newman run './MY_APP/tests/api/collections/Assignment2-Tasks.postman_collection.json' -e './MY_APP/tests/api/envVariables/qa-tasks.postman_environment.json'"
+  },
+  "keywords": [
+    "backend",
+    "postman",
+    "newman"
+  ],
+  "author": "Leonardo Campuzano Magallanes",
+  "license": "ISC",
+  "dependencies": {
+    "newman": "^5.2.2",
+    "newman-reporter-htmlextra": "^1.20.1"
+  }
+}
